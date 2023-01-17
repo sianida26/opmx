@@ -11,5 +11,5 @@ export default defineConfig({
     },
   },
   appType: 'mpa',
-  base: '/'
+  base: '/opmx/'
 })
