@@ -15,5 +15,5 @@
     "noImplicitReturns": true,
     "skipLibCheck": true
   },
-  "include": ["src", "task1/task1.ts"]
+  "include": ["src", "session_1/task_1/index.ts", "session_1/task_2/index.ts"]
 }
