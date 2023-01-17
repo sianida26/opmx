@@ -4,7 +4,7 @@
 set -e
 
 # build
-pwd
+ls
 npm run build
 
 # navigate into the build output directory
