@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-    alert("berhasil!");
-    document.getElementById("coba")!.innerHTML = "Horee berhasil!";
+    document.getElementById("coba")!.innerHTML = "Will be implemented soon";
 });
 
 export {}
