@@ -10,5 +10,6 @@ export default defineConfig({
       },
     },
   },
-  appType: 'mpa'
+  appType: 'mpa',
+  base: '/'
 })
