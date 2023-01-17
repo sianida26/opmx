@@ -17,7 +17,7 @@ tree.height = app.screen.height
 const inputs = Array.from(document.getElementsByClassName("s1t2_input") as HTMLCollectionOf<HTMLElement>)
 
 const positions = [
-    [100,100],
+    [100,200],
     [0,0],
     [0,0],
 ]
