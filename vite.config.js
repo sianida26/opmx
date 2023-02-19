@@ -9,6 +9,7 @@ export default defineConfig({
         s1t1: resolve(__dirname, 'session_1/task_1/index.html'),
         s1t2: resolve(__dirname, 'session_1/task_2/index.html'),
         s1t5: resolve(__dirname, 'session_1/task_5/index.html'),
+        s1t8: resolve(__dirname, 'session_1/task_8/index.html'),
       },
     },
   },
