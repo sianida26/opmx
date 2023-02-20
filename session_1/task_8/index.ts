@@ -5,46 +5,75 @@ const transitionTable = document.querySelector(".inner-transition-table");
 
 const renderedGroups: number[] = [];
 const renderedPeriods: number[] = [];
-const selectedElements = new Set<string>();
+const selectedElements = new Map<number, string>();
 
-// send message to parent element
-// source: https://thuannp.com/react-communication-with-iframe/
-const sendDataToParent = (action: "add" | "delete", elementName: string) => {
+// sync to storage
+const syncToStorage = () => {
+	localStorage.setItem(
+		"s1t8/states",
+		JSON.stringify(Array.from(selectedElements.entries()))
+	);
+	localStorage.setItem("s1t8/lastedit", String(new Date().getTime()));
+
+	sendDataToParentWindow();
+};
+
+const sendDataToParentWindow = () => {
 	window.parent.postMessage(
 		{
-			type: `element-${ action }`,
-			message: elementName,
+			taskId: "s1t8",
+			action: "updateStates",
+			value: selectedElements,
 		},
 		"*"
 	);
 };
 
-const toggleState = (id: string, elementName: string) => {
-	const elem = document.querySelector(`#elem-${id}`);
-	if (elem === null) throw new Error(`Element node with id ${id} not found`);
+const toggleState = (z: number, to?: string) => {
+	const elem = document.querySelector(`#elem-${String(z)}`);
+	if (elem === null)
+		throw new Error(`Element node with atomic number ${z} not found`);
 
-	//if not essential or beneficial state, set to essential state
-	if (
-		!elem.classList.contains("essential") &&
-		!elem.classList.contains("beneficial")
-	) {
-		elem.classList.add("essential");
-		selectedElements.add(elementName);
-
-		//send data to parent
-		sendDataToParent("add", elementName)
-	}
-	//if in essential state, set to beneficial state
-	else if (elem.classList.contains("essential")) {
+	const setToBenefical = () => {
 		elem.classList.add("beneficial");
 		elem.classList.remove("essential");
+		selectedElements.set(z, "beneficial");
+	};
+
+	const setToNone = () => {
+		elem.classList.remove("beneficial");
+		selectedElements.delete(z);
+	};
+
+	const setToEssential = () => {
+		elem.classList.add("essential");
+		selectedElements.set(z, "essential");
+	};
+
+	if (!!to){
+		switch (to){
+			case "beneficial": setToBenefical(); break;
+			case "essential": setToEssential(); break;
+			default: setToNone(); break;
+		}
+		return;
 	}
+
+	//if in essential state, set to beneficial state
+	if (elem.classList.contains("essential")) {
+		setToBenefical();
+	}
+
 	//if in beneficial state, reset the state
 	else if (elem.classList.contains("beneficial")) {
-		elem.classList.remove("beneficial");
-		selectedElements.delete(elementName);
-		sendDataToParent("delete", elementName);
+		setToNone();
 	}
+
+	//if not essential or beneficial state, set to essential state
+	else {
+		setToEssential();
+	}
+	syncToStorage();
 };
 
 //Populate main elements
@@ -98,12 +127,18 @@ elements.forEach((elem) => {
 	}
 
 	//add event listener
-	gridItem.addEventListener("click", () =>
-		toggleState(String(elem.z), elem.name)
-	);
+	gridItem.addEventListener("click", () => toggleState(elem.z));
 
 	//append to table
 	if (typeof elem.group === "number") periodicTable?.appendChild(gridItem);
 	else if (typeof elem.group === "string")
 		transitionTable?.appendChild(gridItem);
 });
+
+//Update state from localstorage
+if (localStorage.getItem("s1t8/states")) {
+	const values = new Map<number, string>(
+		JSON.parse(localStorage.getItem("s1t8/states") ?? "[]")
+	);
+	Array.from(values.entries()).forEach(([z, value]) => toggleState(z,value));
+}

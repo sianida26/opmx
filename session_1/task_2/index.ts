@@ -1,30 +1,30 @@
-import * as PIXI from 'pixi.js'
-import image from './aJuU_1.png'
+const inputs = Array.from(document.querySelectorAll("input"))
+const syncToStorage = () => {
+    localStorage.setItem(
+		"s1t2/values",
+		JSON.stringify(
+			inputs.map(elem => elem.value)
+		)
+	);
+	localStorage.setItem("s1t2/lastedit", String(new Date().getTime()));
 
-//create a container and appends to the html
-const app = new PIXI.Application({ background: '#1099bb' });
-document.body.appendChild(app.view as any);
+    sendDataToParentWindow()
+}
 
-//create tree image as background
-const tree = PIXI.Sprite.from(image);
-app.stage.addChild(tree);
+const sendDataToParentWindow = () => {
+    window.parent.postMessage({
+        taskId: "s1t2",
+        action: "updateValues",
+        value: inputs.map((elem) => elem.value)
+    }, "*")
+}
 
-//set image's size to be fit on container
-tree.width = app.screen.width
-tree.height = app.screen.height
+inputs.forEach(elem => elem.addEventListener("input", syncToStorage))
 
-//input fields
-const inputs = Array.from(document.getElementsByClassName("s1t2_input") as HTMLCollectionOf<HTMLElement>)
+//populate saved value
+if (localStorage.getItem("s1t2/values")){
+    const values = JSON.parse(localStorage.getItem("s1t2/values") ?? "[]");
+    inputs.forEach((elem, i) => elem.value = values[i] ?? "")
+}
 
-const positions = [
-    [100,200],
-    [0,0],
-    [0,0],
-]
-
-inputs.forEach((input, i) => {
-    input.style.position = "absolute"
-    input.style.display = "inline"
-    input.style.left = positions[i][0] + "px"
-    input.style.top = positions[i][1] + "px"
-})
+export {};
