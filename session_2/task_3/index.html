@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.scss">
+</head>
+<body>
+    <div id="container">
+        <header>
+
+            <!-- arrow button -->
+            <button class="btn-arrow">
+                <img src="./images/arrow-icon.svg" alt="arrow icon" />
+            </button>
+
+            <!-- button textbox -->
+            <button class="btn-textbox">
+                <input class="textbox" placeholder="Textbox" disabled />
+            </button>
+
+            <!-- lines -->
+            <div class="line-group">
+                <button class="btn-line">
+                    <span class="line negative hypothesized"></span>
+                </button>
+                <button id="btn-line-dropdown-toggler">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                    </svg>
+                </button>
+                <div id="line-menu-dropdown">
+                    <button id="line-negative-hypothesized">
+                        <span class="line negative hypothesized"></span>
+                    </button>
+                    <button id="line-positive-hypothesized">
+                        <span class="line positive hypothesized"></span>
+                    </button>
+                    <button id="line-negative">
+                        <span class="line negative"></span>
+                    </button>
+                    <button id="line-positive">
+                        <span class="line positive"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <div id="drawing-container">
+
+        </div>
+    </div>
+
+    <script src="./index.ts" type="module"></script>
+</body>
+</html>

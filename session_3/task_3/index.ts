@@ -7,6 +7,7 @@ type Position = { x: number, y: number };
 let selectedElement: HTMLElement | null = null;  // Holds the currently selected HTML element (or null if none is selected).
 let initialPosition: Position = { x: 0, y: 0 };  // Holds the initial mouse position when an element was clicked.
 let offset: Position = { x: 0, y: 0 };  // The offset of the mouse position relative to the selected element's position.
+let isMoveable = false; // Flag indicating whether an element is currently moveable (moveable for task 3, unmoveable for task 4).
 let isMoving = false;  // Flag indicating whether an element is currently being moved.
 
 // Define default positions for each color box.
@@ -92,8 +93,15 @@ window.parent.postMessage({
 window.addEventListener("message", (event: MessageEvent) => {
     const data = event.data;
 
-    // Ignore messages with the wrong taskId.
-    if (data.taskId !== "s3t3") return;
+    // Make the box moveable or unmoveable depending on the taskId.
+    if (data.taskId === "s3t3"){
+        isMoveable = true;
+    } 
+    else if (data.taskId === "s3t4") {
+        isMoveable = false;
+    } 
+    //Ignore message if taskId is not s3t3 or s3t4.
+    else return;
 
     // Handle the 'init' action.
     if (data.action === "init") {
