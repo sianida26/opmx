@@ -1,3 +1,4 @@
+//tl;dr: This code is a real mess.
 import taskContext, {LineType} from "./contexts/TaskContext";
 
 
@@ -21,7 +22,11 @@ const TextboxButton = (() => {
 	const element = document.querySelector(".btn-textbox") as HTMLButtonElement;
 
 	//Emit mouse mode change on button click
-	element.addEventListener("click", () => taskContext.changeMouseMode("textbox"))
+	element.addEventListener("click", () => {
+		taskContext.changeMouseMode("textbox")
+		console.log("aaa")
+	});
+	// (element.querySelector("input") as HTMLInputElement).addEventListener("focus", (e) => console.log("aaa"))
 
 	//Listen to mouse mode change
 	taskContext.onMouseModeChange((mode) => {
@@ -112,6 +117,20 @@ const LineButton = (() => {
 			}
 		}
 	})
+})()
+
+const DeleteButton = (() => {
+	const deleteButton = document.querySelector("#delete-btn") as HTMLButtonElement;
+
+	taskContext.onTextboxFocus(() => {
+		deleteButton.classList.remove("hidden")
+	})
+
+	taskContext.onTextboxBlur(() => {
+		deleteButton.classList.add("hidden")
+	})
+
+	deleteButton.addEventListener("pointerdown", () => taskContext.deleteSelectedTextbox())
 })()
 
 

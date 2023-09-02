@@ -15,6 +15,8 @@ export class Line {
         this.element.className = `absolute line ${type.split("-").join(" ")}`
         this.element.style.height = "2px";
         this.element.style.transformOrigin = "0 0";
+
+        this.element.onclick = () => this.element.classList.toggle("focus")
     }
 
     appendToElement(element: HTMLElement){

@@ -19,6 +19,8 @@ class TaskContext extends Context  {
     textBoxes: TextBox[] = []
     currentOriginTextBox: TextBox | null = null;
     currentDrawingLine: Line | null = null;
+    focusTextBox: TextBox | null = null;
+    lastFocusTextBox: TextBox | null = null;
 
     lines: {origin: TextBox, target: TextBox, line: Line}[] = []; //saves the lines connection between textBoxes
 
@@ -39,6 +41,25 @@ class TaskContext extends Context  {
 
     onMouseModeChange(callback: (mode: MouseMode) => void){
         this._emitter.on("mouse mode change", callback)
+    }
+
+    onTextboxFocus(callback: () => void){
+        this._emitter.on("textbox focus", (textbox: TextBox) => {
+            callback();
+        })
+    }
+
+    deleteSelectedTextbox(){
+        console.log("Deleted textbox:", this.lastFocusTextBox?.id)
+        this._emitter.emit("textbox blur")
+        this.lastFocusTextBox?.remove();
+        this.textBoxes = this.textBoxes.filter(textbox => textbox !== this.lastFocusTextBox)
+    }
+
+    onTextboxBlur(callback: () => void){
+        this._emitter.on("textbox blur", (textbox: TextBox) => {
+            callback();
+        })
     }
 
     changeLineType(type: LineType){
@@ -103,6 +124,24 @@ class TaskContext extends Context  {
         textBox.id = this.textBoxes.length;
         this.textBoxes.push(textBox);
         this._emitter.emit("textbox created", textBox)
+
+        textBox.element.addEventListener("focus", () => {
+            this.focusTextBox = textBox;
+            this.lastFocusTextBox = textBox ;
+            console.log("focus", textBox._id)
+            console.log("last focus", this.lastFocusTextBox._id)
+            this._emitter.emit("textbox focus", textBox);
+        })
+
+        textBox.element.addEventListener("blur", () => {
+            if (this.focusTextBox === textBox){
+                this.focusTextBox = null;
+                console.log("blur", textBox._id)
+                console.log("last focus", this.lastFocusTextBox?._id)
+                this._emitter.emit("textbox blur", textBox)
+            }
+        })
+
         return textBox;
     }
 

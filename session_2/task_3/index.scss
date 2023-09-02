@@ -31,9 +31,13 @@ input.textbox {
     width: 120px;
     padding: 10px 4px;
     background-color: white;
-    border: 2px black solid;
+    border: 2px rgba(65, 60, 60, 0.5) solid;
     text-align: center;
     font-size: 1rem;
+
+    &:focus {
+        box-shadow: 0 0 10px 5px rgba(0, 255, 0, 0.4), 0 8px 10px -6px rgba(0, 255, 0, 0.4);    
+    }
 }
 
 header {
@@ -63,6 +67,25 @@ header {
 
     .btn-arrow {
         width: 50px;
+    }
+
+    .btn-textbox{
+
+        padding: 0.25rem;
+        // background-color:red;
+
+        // the input
+        .textbox-header{
+            width: 120px;
+            background-color: white;
+            text-align: center;
+            padding: 10px 4px;
+            font-weight: 400;
+            font-size: 16px;
+            color: rgb(170,170,170);
+            border: 1.6px rgba(65, 60, 60, 0.5) solid;
+        }
+
     }
 
     .line-group{
@@ -123,6 +146,16 @@ header {
             padding: 0;
         }
     }
+
+    .focus-menu{
+        
+        padding-left: 24px;
+
+        button {
+            color: white;
+            font-size: 2rem;
+        }
+    }
 }
 
 #drawing-container{
@@ -166,4 +199,8 @@ header {
 
 .absolute {
     position: absolute;
+}
+
+.hidden {
+    display: none;
 }
