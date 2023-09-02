@@ -4,8 +4,9 @@ import { CartesianCoordinate } from "./types";
 
 export class Line {
 
+    element: HTMLSpanElement;
+    
     private type: LineType
-    private element: HTMLSpanElement;
     private origin: CartesianCoordinate;
 
     constructor(type: LineType){

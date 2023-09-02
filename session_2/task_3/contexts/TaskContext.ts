@@ -193,23 +193,40 @@ class TaskContext extends Context  {
         
         //detect landing textbox
         const textBoxAtPoint = this.getTextBoxFromPoint(clientX, clientY);
-        if (!textBoxAtPoint){
-            //if no textbox at ending point, remove current line
+        if (!textBoxAtPoint || textBoxAtPoint === this.currentOriginTextBox){
+            //if no textbox at ending point or target textbox is same as origin, remove current line
             this.currentDrawingLine.remove();
             this.currentDrawingLine = null;
             return;
         }
 
-        if (this.lines.find(line => line[0] === this.currentOriginTextBox && line[1] === textBoxAtPoint) ||
-            this.lines.find(line => line[0] === textBoxAtPoint && line[1] === this.currentOriginTextBox)
-        ){
-            //if line already exists, remove current line
-            this.currentDrawingLine.remove();
-            this.currentDrawingLine = null;
-            return;
+        const existingLine = this.lines.find(line =>
+            [line.origin, line.target].includes(this.currentOriginTextBox!) && [line.origin, line.target].includes(textBoxAtPoint)
+        )
+        console.log(`existing line origin: ${existingLine?.origin._id}, target: ${existingLine?.target._id}`);
+        console.log(`current line origin: ${this.currentOriginTextBox._id}, target: ${textBoxAtPoint._id}`)
+        if (existingLine){
+            //if line already exists, remove existing line, then apply new one
+            // console.log("remove existing line");
+            this.lines.filter(line => {
+                if (line !== existingLine) return true;
+
+                line.line.remove()
+                document.querySelector(`#line-${line.target._id}-${line.origin._id}`)?.remove();
+                document.querySelector(`#line-${line.origin._id}-${line.target._id}`)?.remove();
+            })
         }
+        // if (this.lines.find(line => line[0] === this.currentOriginTextBox && line[1] === textBoxAtPoint) ||
+        //     this.lines.find(line => line[0] === textBoxAtPoint && line[1] === this.currentOriginTextBox)
+        // ){
+        //     //if line already exists, remove existing line, then apply new one
+        //     // this.currentDrawingLine.remove();
+        //     // this.currentDrawingLine = null;
+        //     return;
+        // }
         
         this.currentDrawingLine.setEndPoint(textBoxAtPoint.getPosition()); //snap to textbox
+        this.currentDrawingLine.element.id = `line-${this.currentOriginTextBox._id}-${textBoxAtPoint._id}`
 
         //save line
         this.lines.push({origin: this.currentOriginTextBox, target: textBoxAtPoint, line: this.currentDrawingLine})
