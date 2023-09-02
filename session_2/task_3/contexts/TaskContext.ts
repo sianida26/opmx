@@ -54,6 +54,12 @@ class TaskContext extends Context  {
         this._emitter.emit("textbox blur")
         this.lastFocusTextBox?.remove();
         this.textBoxes = this.textBoxes.filter(textbox => textbox !== this.lastFocusTextBox)
+        this.lines = this.lines.filter(line => {
+            if (line.target !== this.lastFocusTextBox && line.origin !== this.lastFocusTextBox) return true;
+
+            line.line.remove();
+            return false;
+        })
     }
 
     onTextboxBlur(callback: () => void){
